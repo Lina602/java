@@ -1,0 +1,160 @@
+1、8种基本类型
+    byte  short  int  long  float   double   boolen   char
+
+    数据类型    关键字     在内存中占用字节数   取值范围    默认值
+    布尔型     boolen      1                    true,false   false
+    字节型     byte        1                    -128-127       0
+    短整型     short       2                    -2^15-2^15-1   0
+    整型       int         4                    -2^31-2^31-1   0
+    长整型     long        8                    -2^63-2^63-1   0
+    字符型     char        2                    0-2^16-1       '\u0000'
+    单精度浮点 float       4             1.4013E^-45-3.4028^38 0.0F
+    双精度浮点 double      8             4.9E^-324-1.7977E^308 0.0D
+
+2、重载、重写
+    重写：
+        1、不能存在同一个类中，在继承或实现关系的类中
+        2、名相同，参数列表相同，方法返回值相同
+        3、子类方法的访问修饰符要大于父类的
+        4、子类的检查异常类型要小于父类的检查异常
+    重载：
+        1、可以在一个类中也可以在继承关系的类中
+        2、名相同
+        3、参数列表不同（个数，顺序，类型）和方法的返回值类型无关
+
+3、java中是否可以覆盖一个private或者static方法
+    static不能覆盖，因为方法覆盖是给予运行时动态绑定的，而static方法时编译时静态绑定的。
+    private不能覆盖，因为private修饰的变量和方法只能在当前类中使用，如果是其他的类继承当前类
+    是不能访问到private变量或方法的，当然不能覆盖。
+
+4、PriorityQueue
+    基于优先级堆的无界队列，元素按照自然顺序排序，排序比较器不能为null,因为他没有自然顺序，是线程不安全的，
+    入队和出队时间负责度是O(log(n))
+    1）插入：
+        add()、offer()
+        add插入失败报异常，offer插入失败返回false
+
+    2）寻找队列头部元素
+        element()、peek()
+        获取队首元素，但不删除。失败时element抛出异常，peek返回null
+
+    3）删除元素
+        remove()、poll()
+        从队首删除元素，失败时remove抛出异常，poll返回null
+
+    使用：最大堆：获取数组中最小的几个数，最小堆：获取数据中最大的几个数
+
+5、Concurrent包
+    Concurrent包里的其他东西：ArrayBlockingQueue、CountDownLatch等等
+    ArrayBlockingQueue:
+        1）、数组实现的线程安全的有界的阻塞队列，通过互斥锁保护竞争资源。有界，用数组实现。
+        2）、数据结构和原理：与ReentrantLock组合，可以设置公平锁和非公平锁，默认是非公平锁。
+                             与Condition组合，notEmpty和notFull：
+                             当某线程A要取数据时，数组正好为空，则该线程会执行notEmpty.await()进行等待；
+                             当其他某个线程B向数组中插入了数据后，会调用notEmpty.signal()唤醒。
+                             若某个线程H要插入数据时，数组已满，则该线程会执行notFull.await()进行等待；
+                             当其他线程I取出数据后，会调用notFull.signal()唤醒。
+        3）、函数列表：
+            // 将指定的元素插入到此队列的尾部（如果立即可行且不会超过该队列的容量），在成功时返回 true，如果此队列已满，则抛出 IllegalStateException。
+            boolean add(E e)
+
+            // 自动移除此队列中的所有元素。
+            void clear()
+
+            // 如果此队列包含指定的元素，则返回 true。
+            boolean contains(Object o)
+
+            // 移除此队列中所有可用的元素，并将它们添加到给定 collection 中。
+            int drainTo(Collection<? super E> c)
+
+            // 最多从此队列中移除给定数量的可用元素，并将这些元素添加到给定 collection 中。
+            int drainTo(Collection<? super E> c, int maxElements)
+
+            // 返回在此队列中的元素上按适当顺序进行迭代的迭代器。
+            Iterator<E> iterator()
+
+            // 将指定的元素插入到此队列的尾部（如果立即可行且不会超过该队列的容量），在成功时返回 true，如果此队列已满，则返回 false。
+            boolean offer(E e)
+
+            // 将指定的元素插入此队列的尾部，如果该队列已满，则在到达指定的等待时间之前等待可用的空间。
+            boolean offer(E e, long timeout, TimeUnit unit)
+
+            // 获取但不移除此队列的头；如果此队列为空，则返回 null。
+            E peek()
+
+            // 获取并移除此队列的头，如果此队列为空，则返回 null。
+            E poll()
+
+            // 获取并移除此队列的头部，在指定的等待时间前等待可用的元素（如果有必要）。
+            E poll(long timeout, TimeUnit unit)
+
+            // 将指定的元素插入此队列的尾部，如果该队列已满，则等待可用的空间。
+            void put(E e)
+
+            // 返回在无阻塞的理想情况下（不存在内存或资源约束）此队列能接受的其他元素数量。
+            int remainingCapacity()
+
+            // 从此队列中移除指定元素的单个实例（如果存在）。
+            boolean remove(Object o)
+
+            // 返回此队列中元素的数量。
+            int size()
+
+            // 获取并移除此队列的头部，在元素变得可用之前一直等待（如果有必要）。
+            E take()
+
+            // 返回一个按适当顺序包含此队列中所有元素的数组。
+            Object[] toArray()
+
+            // 返回一个按适当顺序包含此队列中所有元素的数组；返回数组的运行时类型是指定数组的运行时类型。
+            <T> T[] toArray(T[] a)
+
+            // 返回此 collection 的字符串表示形式。
+            String toString()
+
+    LinkedBlockingQueue
+        1）、如果不指定容量，默认为Integer.MAX_VALUE，也就是无界阻塞队列。
+            LinkedBlockingQueue内部分别使用了takeLock 和 putLock 对并发进行控制，也就是说，
+            添加和删除操作并不是互斥操作，可以同时进行，这样也就可以大大提高吞吐量。
+            LinkedBlockingQueue对每一个lock锁都提供了一个Condition用来挂起和唤醒其他线程
+
+        LinkedBlockingQueue是一个阻塞队列，内部由两个ReentrantLock来实现出入队列的线程安全，
+        由各自的Condition对象的await和signal来实现等待和唤醒功能。它和ArrayBlockingQueue的不同点在于：
+
+        1)、队列大小有所不同，ArrayBlockingQueue是有界的初始化必须指定大小，
+            而LinkedBlockingQueue可以是有界的也可以是无界的(Integer.MAX_VALUE)，
+            对于后者而言，当添加速度大于移除速度时，在无界的情况下，可能会造成内存溢出等问题。
+        2)、数据存储容器不同，ArrayBlockingQueue采用的是数组作为数据存储容器，
+            而LinkedBlockingQueue采用的则是以Node节点作为连接对象的链表。
+        3)、由于ArrayBlockingQueue采用的是数组的存储容器，因此在插入或删除元素时不会产生或销毁任何额外的对象实例，
+            而LinkedBlockingQueue则会生成一个额外的Node对象。这可能在长时间内需要高效并发地处理大批量数据的时，
+            对于GC可能存在较大影响。
+        4)、两者的实现队列添加或移除的锁不一样，ArrayBlockingQueue实现的队列中的锁是没有分离的，
+            即添加操作和移除操作采用的同一个ReenterLock锁，而LinkedBlockingQueue实现的队列中的锁是分离的，
+            其添加采用的是putLock，移除采用的则是takeLock，这样能大大提高队列的吞吐量，
+            也意味着在高并发的情况下生产者和消费者可以并行地操作队列中的数据，以此来提高整个队列的并发性能。
+
+    Executor:
+        Executor框架包括3大部分：
+        1）任务。也就是工作单元，包括被执行任务需要实现的接口：Runnable接口或者Callable接口；
+        2）任务的执行。也就是把任务分派给多个线程的执行机制，包括Executor接口及继承自Executor接口的ExecutorService接口。
+        3）异步计算的结果。包括Future接口及实现了Future接口的FutureTask类。
+
+    concurrent下面的包
+        Executor用来创建线程池，在实现Callable接口时，添加线程。
+        FeatureTask 的get方法所返回的结果类型
+        TimeUnit
+        Semaphore 控制线程的并发数量
+
+6、String
+    String、StringBuffer、StringBuilder的区别
+    1、都是final类，不允许被继承
+    2、String长度是不可变的，StringBuffer、StringBuilder长度是可变的；
+    3、StringBuffer是线程安全的，StringBuilder不是线程安全的，但他们两个钟的所有方法都是相同的，
+        StringBuffer在StringBuilder的方法之上添加了synchronized修饰，保证线程安全；
+    4、StringBuilder比StringBuffer拥有更好的性能；
+    5、如果一个String类型的字符串，在编译时就可以确定是一个字符串常量，则编译完成之后，字符串会自动拼接成一个常量，
+        此时String的速度比StringBuffer和StringBuilder的性能好的多。
+
+
+
